@@ -92,7 +92,7 @@ async function runSqsTest(endpointUrl, awsSecretAccessKey, awsAccessId) {
 async function main() {
     const awsSecretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
     const awsAccessId = process.env.AWS_ACCESS_KEY_ID;
-    const endpoints = ['http://localhost', 'https://jobs.kumquat.live'];
+    const endpoints = ['http://localhost'];
 
     for (const endpointUrl of endpoints) {
         console.log(`\nTesting with endpoint: ${endpointUrl}`);

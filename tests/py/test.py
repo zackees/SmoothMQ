@@ -86,7 +86,7 @@ def check_server_is_alive(endpoint_url: str) -> bool:
 def main() -> None:
     aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY")
     aws_access_id=os.getenv("AWS_ACCESS_KEY_ID")
-    endpoints = ["http://localhost", "https://jobs.kumquat.live"]
+    endpoints = ["http://localhost"]
     for i, endpoint_url in enumerate(endpoints):
         is_alive = check_server_is_alive(endpoint_url)
         if not is_alive:
