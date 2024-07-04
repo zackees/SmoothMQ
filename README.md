@@ -1,10 +1,39 @@
-# jobs.kumquat.live
+# SmoothMQ Fork
 
 SmoothMQ is a drop-in replacement for SQS with a much smoother developer experience.
 It has a functional UI, observability, tracing, message scheduling, and rate-limiting.
 SmoothMQ lets you run a private SQS instance on any cloud.
 
-<!-- A drop-in replacement for SQS designed for great developer experience and efficiency. -->
+## Fork Info
+
+This fork has a number of improvements which allow it to be more easily deployed.
+
+  * port 3000 -> localhost:80/ui and is protected with basic http authorization.
+    * user: user
+    * password: <AMAZON_SECRET_KEY>
+  * port 3001 -> localhost:80/ and is protected with the amazon secret key 
+  * Can be dropped into Render.com / Digital Ocean
+    * If you allocate a disk at /var/data then the SQS queue will be persistant across reboots/deploys
+  * This code base has a test suite
+    * javascript
+    * python
+  * Deleting of Queues is implemented
+
+## Testing
+
+  * We have three tests
+    * Javascript
+      * `test.js` shows how to connect using the new Amazon SQS client driver
+      * `test-legacy.js` shows how to connect using a wrapper for the new Amazon SQS Driver
+        * `const AWS = require('sqs-legacy-adapter');`
+        * instead of `const AWS = require('aws-sdk');`
+    * python
+      * `test.py`
+     
+## Footguns
+
+  * This SQS package only supports signing v4.
+
 
 ## Login Credentials
 
@@ -22,10 +51,14 @@ It will be the same as the password used to access the /ui page.
 Clone the repo and then invoke:
 
 ```bash
-docker compose up
+./dev
 ```
 
-When you are finished, ctrl-c and then `docker compose down`.
+Then optionally invoke the tests
+
+```
+./test
+```
 
 ## Getting Started
 
@@ -37,26 +70,6 @@ This will run a UI on `:3000` and an SQS-compatible server on `:3001`.
 
 ```
 $ go run .
-```
-
-## Connecting
-
-This works with any SQS client in any language.
-
-### Python
-
-``` py
-import boto3
-
-# Simply change the endpoint_url
-sqs = boto3.client("sqs", ..., endpoint_url="http://localhost:3001")
-sqs.send_message(QueueUrl="...", MessageBody="hello world")
-```
-
-Celery works seamlessly:
-
-``` py
-app = Celery("tasks", broker_url="sqs://...@localhost:3001")
 ```
 
 ## UI
