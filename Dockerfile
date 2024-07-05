@@ -47,6 +47,7 @@ RUN apt-get update && \
     bash \
     sudo \
     curl \
+    sed \
     npm && \
     npm install -g dotenv-cli && \
     apt-get clean
@@ -60,8 +61,11 @@ RUN dos2unix /entrypoint.sh
 COPY .env /etc/.env
 
 # Check if AWS_SECRET_ACCESS_KEY argument is provided and not default, then add to /etc/.env
+#ARG AWS_SECRET_ACCESS_KEY
+#ENV AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
 ARG AWS_SECRET_ACCESS_KEY
 RUN if [ -n "$AWS_SECRET_ACCESS_KEY" ] && [ "$AWS_SECRET_ACCESS_KEY" != "default" ]; then \
+    sed -i '/AWS_SECRET_ACCESS_KEY/d' /etc/.env; \
     echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> /etc/.env; \
     fi
 
@@ -70,6 +74,9 @@ COPY generate-htpasswd.sh /generate-htpasswd.sh
 RUN chmod +x /generate-htpasswd.sh
 RUN dos2unix /generate-htpasswd.sh
 RUN /generate-htpasswd.sh
+
+COPY nginx.conf /etc/nginx/nginx.conf
+RUN dos2unix /etc/nginx/nginx.conf
 
 # Run the generate-htpasswd.sh script at container start
 

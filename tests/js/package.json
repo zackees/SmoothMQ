@@ -8,6 +8,6 @@
         "util": "^0.12.5"
     },
     "scripts": {
-        "test": "node test.js"
+        "test": "node test.js && node test-legacy.js"
     }
 }

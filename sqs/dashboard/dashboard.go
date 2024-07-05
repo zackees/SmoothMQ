@@ -46,11 +46,11 @@ func NewDashboard(queue models.Queue, tenantManager models.TenantManager) *Dashb
 		tenantManager: tenantManager,
 	}
 
-	app.Get("/", d.Queues)
-	app.Post("/queues", d.NewQueue)
-	app.Get("/queues/:queue", d.Queue)
-	app.Post("/queues/:queue/delete", d.DeleteQueue)
-	app.Get("/queues/:queue/messages/:message", d.Message)
+	app.Get("/ui", d.Queues)
+	app.Post("/ui/queues", d.NewQueue)
+	app.Get("/ui/queues/:queue", d.Queue)
+	app.Post("/ui/queues/:queue/delete", d.DeleteQueue)
+	app.Get("/ui/queues/:queue/messages/:message", d.Message)
 
 	return d
 }
@@ -161,7 +161,7 @@ func (d *Dashboard) NewQueue(c *fiber.Ctx) error {
 		return err
 	}
 
-	return c.Redirect("/")
+	return c.Redirect("/ui")
 }
 
 func (d *Dashboard) DeleteQueue(c *fiber.Ctx) error {
@@ -173,5 +173,5 @@ func (d *Dashboard) DeleteQueue(c *fiber.Ctx) error {
 		return err
 	}
 
-	return c.Redirect("/")
+	return c.Redirect("/ui")
 }
