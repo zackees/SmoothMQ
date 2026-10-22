@@ -35,12 +35,15 @@ COPY sqs/*.go ./
 RUN go build -v -o /run-app .
 
 
-FROM debian:bookworm
+# Bookworm has no fix for the October 2026 NGINX advisory; use Debian's
+# patched Trixie package (DSA-6575-1), including its security revision.
+FROM debian:trixie
 
 # install nginx, apache2-utils (for htpasswd), pgrep, and bash
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
     nginx \
+    adduser \
     dos2unix \
     apache2-utils \
     procps \
@@ -50,6 +53,7 @@ RUN apt-get update && \
     sed \
     npm && \
     npm install -g dotenv-cli && \
+    dpkg --compare-versions "$(dpkg-query -W -f='${Version}' nginx)" ge "1.26.3-3+deb13u10" && \
     apt-get clean
 
 COPY --from=builder /run-app /usr/local/bin/
